@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Future Onward OPC — Expression of Interest | Pragoti Industries Ltd</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #061a2e; --ink: #0a2744; --cyan: #1ec8e0; --teal: #0d8f7a; --lime: #7fd11a;
+      --muted: #8aa0b5; --white: #f7fbff; --panel: rgba(255,255,255,0.06); --line: rgba(255,255,255,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { font-family: "Manrope", system-ui, sans-serif; background: #020b14; color: var(--white); overflow: hidden; }
+    .deck { height: 100vh; width: 100vw; position: relative; }
+    .slide {
+      position: absolute; inset: 0; display: none;
+      padding: clamp(1.25rem, 3vw, 2.75rem) clamp(1.25rem, 3.5vw, 3.5rem);
+      background:
+        radial-gradient(1200px 600px at 85% -10%, rgba(30,200,224,0.18), transparent 55%),
+        radial-gradient(900px 500px at -10% 110%, rgba(13,143,122,0.16), transparent 50%),
+        linear-gradient(160deg, #04101c 0%, #0a2744 48%, #062033 100%);
+      overflow: hidden;
+    }
+    .slide.active { display: flex; flex-direction: column; animation: rise .4s ease; }
+    @keyframes rise { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: none;} }
+    .slide::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 48px 48px; mask-image: linear-gradient(180deg, rgba(0,0,0,.5), transparent 75%);
+    }
+    .topbar, .content, .footer { position: relative; z-index: 1; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: clamp(.7rem, 1.5vh, 1.3rem); }
+    .brand-row { display: flex; align-items: center; gap: .75rem; }
+    .brand-row img { height: 46px; width: auto; object-fit: contain; }
+    .brand-meta strong { display:block; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; }
+    .brand-meta span { color: var(--muted); font-size: .72rem; }
+    .audience-logos { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; justify-content: flex-end; }
+    .chip { display:flex; align-items:center; gap:.4rem; background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:999px; padding:.3rem .65rem .3rem .35rem; }
+    .chip img { height:26px; width:26px; object-fit:contain; background:#fff; border-radius:50%; padding:2px; }
+    .chip span { font-size:.65rem; color:#c9d7e6; font-weight:600; }
+    .content { flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0; }
+    h1 { font-family:"Source Serif 4",Georgia,serif; font-weight:600; font-size:clamp(1.85rem,4vw,3.3rem); line-height:1.08; letter-spacing:-.02em; max-width:18ch; }
+    h2 { font-family:"Source Serif 4",Georgia,serif; font-weight:600; font-size:clamp(1.45rem,2.8vw,2.35rem); line-height:1.15; letter-spacing:-.02em; margin-bottom:.65rem; }
+    .lede { margin-top:.75rem; max-width:48rem; font-size:clamp(.95rem,1.3vw,1.12rem); line-height:1.5; color:#d5e3f0; }
+    .kicker { display:inline-flex; align-items:center; gap:.5rem; color:var(--cyan); font-size:.72rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; margin-bottom:.7rem; }
+    .kicker::before { content:""; width:1.4rem; height:2px; background:linear-gradient(90deg,var(--cyan),var(--lime)); }
+    .footer { display:flex; justify-content:space-between; align-items:center; gap:1rem; padding-top:.75rem; border-top:1px solid var(--line); color:var(--muted); font-size:.72rem; }
+    .progress { display:flex; align-items:center; gap:.5rem; }
+    .bar { width:min(200px,26vw); height:3px; background:rgba(255,255,255,.1); border-radius:99px; overflow:hidden; }
+    .bar > i { display:block; height:100%; background:linear-gradient(90deg,var(--cyan),var(--lime)); width:0%; }
+    .grid-2 { display:grid; grid-template-columns:1.1fr .9fr; gap:clamp(.85rem,2vw,1.75rem); align-items:stretch; }
+    .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:.85rem; }
+    .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:.75rem; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:1rem 1.05rem; backdrop-filter:blur(8px); }
+    .card h3 { font-size:.95rem; font-weight:700; margin-bottom:.4rem; }
+    .card p, .card li { color:#c9d7e6; font-size:.86rem; line-height:1.45; }
+    .card ul { list-style:none; display:grid; gap:.35rem; }
+    .card li::before { content:""; display:inline-block; width:.4rem; height:.4rem; border-radius:50%; background:var(--cyan); margin-right:.5rem; transform:translateY(-1px); }
+    .stat-row { display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem; margin-top:1.1rem; }
+    .stat { border-left:2px solid var(--cyan); padding-left:.75rem; }
+    .stat b { display:block; font-size:1.2rem; font-weight:800; }
+    .stat span { color:var(--muted); font-size:.72rem; }
+    .partner-card { text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:space-between; gap:.7rem; min-height:200px; }
+    .partner-card .logo-box { width:100%; height:78px; display:flex; align-items:center; justify-content:center; background:#fff; border-radius:12px; padding:.55rem .9rem; }
+    .partner-card img { max-height:52px; max-width:100%; object-fit:contain; }
+    .partner-card .role { color:var(--cyan); font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+    .flow { display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:.65rem; align-items:center; margin-top:1rem; }
+    .flow .node { background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:14px; padding:.85rem; text-align:center; }
+    .flow .node strong { display:block; margin-bottom:.25rem; font-size:.92rem; }
+    .flow .node span { color:var(--muted); font-size:.75rem; }
+    .arrow { color:var(--cyan); font-size:1.3rem; font-weight:700; }
+    .checklist { display:grid; grid-template-columns:1fr 1fr; gap:.6rem 1rem; margin-top:.4rem; }
+    .checklist div { display:flex; gap:.65rem; align-items:flex-start; padding:.7rem .85rem; border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.04); }
+    .checklist i { flex:0 0 auto; width:1.25rem; height:1.25rem; border-radius:50%; background:rgba(30,200,224,.15); border:1px solid rgba(30,200,224,.45); display:grid; place-items:center; color:var(--cyan); font-style:normal; font-size:.7rem; margin-top:.1rem; }
+    .checklist strong { display:block; font-size:.88rem; margin-bottom:.15rem; }
+    .checklist span { color:#b7c8d9; font-size:.78rem; line-height:1.35; }
+    .open-box { margin-top:.85rem; border:1px dashed rgba(127,209,26,.45); background:rgba(127,209,26,.07); border-radius:14px; padding:.95rem 1.1rem; font-size:.9rem; color:#dceec0; }
+    .open-box strong { color:#c8ef8d; }
+    .agenda { display:grid; gap:.4rem; margin-top:.35rem; }
+    .agenda-item { display:grid; grid-template-columns:2.3rem 1fr; gap:.7rem; align-items:center; padding:.55rem .75rem; border-radius:10px; font-size:.92rem; }
+    .agenda-item:nth-child(odd) { background:rgba(255,255,255,.04); }
+    .agenda-item b { color:var(--cyan); }
+    .title-orgs { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.2rem; }
+    .title-orgs span { font-size:.72rem; font-weight:600; padding:.4rem .7rem; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.04); color:#d5e3f0; }
+    .contact { display:flex; gap:1.1rem; align-items:center; margin-top:1.2rem; padding:1rem 1.1rem; border-radius:16px; background:rgba(255,255,255,.05); border:1px solid var(--line); max-width:36rem; }
+    .contact img { width:64px; height:64px; border-radius:12px; object-fit:cover; }
+    .nav-hint { position:fixed; right:1rem; bottom:1rem; z-index:20; display:flex; gap:.35rem; }
+    .nav-hint button { width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:rgba(6,26,46,.85); color:#fff; cursor:pointer; font-size:1.05rem; }
+    .nav-hint button:hover { border-color:var(--cyan); color:var(--cyan); }
+    .title-slide .content { justify-content:flex-end; padding-bottom:.5rem; }
+    .bus-photo { width:100%; height:100%; min-height:220px; object-fit:cover; border-radius:14px; border:1px solid var(--line); display:block; }
+    .bus-photo-wrap { position:relative; border-radius:14px; overflow:hidden; }
+    .bus-photo-wrap .tag { position:absolute; left:.7rem; bottom:.7rem; background:rgba(4,16,28,.82); border:1px solid var(--line); padding:.35rem .6rem; border-radius:8px; font-size:.72rem; font-weight:700; letter-spacing:.04em; }
+    .spec-table { width:100%; border-collapse:collapse; font-size:.8rem; }
+    .spec-table th, .spec-table td { padding:.45rem .55rem; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+    .spec-table th { color:var(--muted); font-weight:600; width:38%; }
+    .spec-table td { color:#e4eef7; font-weight:600; }
+    .price-card { text-align:center; }
+    .price-card .amt { font-size:1.85rem; font-weight:800; color:#fff; margin:.35rem 0; }
+    .price-card .amt span { font-size:.95rem; font-weight:600; color:var(--cyan); }
+    .media-frame { width:100%; aspect-ratio:16/9; max-height:min(52vh,520px); border-radius:14px; border:1px solid var(--line); overflow:hidden; background:#000; }
+    .media-frame video, .media-frame iframe { width:100%; height:100%; border:0; display:block; }
+    .note { font-size:.75rem; color:var(--muted); margin-top:.55rem; line-height:1.4; }
+    .roadmap { display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem; margin-top:.9rem; }
+    .roadmap .card { position:relative; padding-top:1.2rem; }
+    .roadmap .step { position:absolute; top:.65rem; right:.75rem; color:var(--cyan); font-size:.7rem; font-weight:800; letter-spacing:.08em; }
+    .split-list { display:grid; grid-template-columns:1fr 1fr; gap:.85rem; margin-top:.85rem; }
+    @media (max-width:980px) {
+      .grid-2,.grid-3,.grid-4,.checklist,.split-list,.flow,.stat-row,.roadmap { grid-template-columns:1fr; }
+      .flow .arrow { transform:rotate(90deg); justify-self:center; }
+      .audience-logos { display:none; }
+      h1 { max-width:none; }
+    }
+  </style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<section class="slide title-slide active" data-title="Title">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>Reg. No. C-193816</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry of Industries</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="kicker">Expression of Interest</div>
+    <h1>Integrated Electric Bus Ecosystem for Bangladesh</h1>
+    <p class="lede">Bus + Charging + Depot for BRTC through Pragoti Industries Limited — with warranty, model specifications, and a long-term KD / assembly investment pathway.</p>
+    <div class="title-orgs">
+      <span>Presented to: Pragoti Industries Ltd</span>
+      <span>In presence of: BRTC · Ministry of Industries · Chairman, BSEC</span>
+    </div>
+    <div class="stat-row" style="max-width:48rem">
+      <div class="stat"><b>KINWIN</b><span>HTK6121 / HTK6901 buses</span></div>
+      <div class="stat"><b>Huawei</b><span>High-power charging</span></div>
+      <div class="stat"><b>WIETC</b><span>Depot EPC &amp; upgrade</span></div>
+    </div>
+  </div>
+  <div class="footer"><span>Confidential · For official discussion</span><div class="progress"><span class="page"></span><div class="bar"><i></i></div></div></div>
+</section>
+
+<section class="slide" data-title="Agenda">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Agenda</div>
+<h2>What we will cover today</h2>
+<div class="agenda">
+  <div class="agenda-item"><b>01</b><div>Strategic context &amp; Future Onward / partner framework</div></div>
+  <div class="agenda-item"><b>02</b><div>KINWIN strengths, global cases &amp; company video</div></div>
+  <div class="agenda-item"><b>03</b><div>HTK6121GBEV &amp; HTK6901GBEV — photos and key specifications</div></div>
+  <div class="agenda-item"><b>04</b><div>Warranty / aftersales framework</div></div>
+  <div class="agenda-item"><b>05</b><div>Integrated charging (Huawei video) &amp; depot EPC (WIETC)</div></div>
+  <div class="agenda-item"><b>06</b><div>Long-term KD / assembly investment interest &amp; next steps</div></div>
+</div>
+</div>
+  <div class="footer">
+    <span>For official discussion</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Context">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">The Opportunity</div>
+<h2>Electrification succeeds only as a complete operating system</h2>
+<div class="grid-2" style="margin-top:.85rem">
+  <div>
+    <p class="lede" style="margin:0">Bus specification drives battery and charging demand; charging drives depot electrical design; depots determine reliability and expansion. We propose one coordinated framework for BRTC through Pragoti.</p>
+    <div class="stat-row">
+      <div class="stat"><b>≥220–250 km</b><span>Model cruise range class</span></div>
+      <div class="stat"><b>CCS2</b><span>Dual-gun DC charging</span></div>
+      <div class="stat"><b>LFP / CATL</b><span>Water-cooled packs</span></div>
+    </div>
+  </div>
+  <div class="card"><h3>Project framing</h3><ul>
+    <li>End user: BRTC</li>
+    <li>Procuring entity: Pragoti Industries Limited</li>
+    <li>Oversight: BSEC &amp; Ministry of Industries</li>
+    <li>Scope: buses + Huawei charging + depot works</li>
+  </ul></div>
+</div>
+</div>
+  <div class="footer">
+    <span>Single ecosystem — not three disconnected procurements</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Future Onward">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Who We Are</div>
+<h2>Future Onward OPC — Bangladesh system integrator</h2>
+<div class="grid-2" style="margin-top:.85rem">
+  <div>
+    <p class="lede" style="margin:0">We coordinate international technology partners into one accountable delivery framework for Pragoti and BRTC — vehicles, charging, depots, commissioning, training and lifecycle support.</p>
+    <div class="split-list">
+      <div class="card"><h3>Authorizations</h3><ul>
+        <li>Authorized local partner — CHTC KINWIN</li>
+        <li>Sales partner — Huawei International Pte. Ltd.</li>
+        <li>Depot EPC coordination — WIETC, China</li>
+      </ul></div>
+      <div class="card"><h3>Our role</h3><ul>
+        <li>Single Bangladesh point of contact</li>
+        <li>Technical &amp; commercial coordination</li>
+        <li>After-sales / spares / training bridge</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="card" style="display:flex;flex-direction:column;justify-content:center;gap:.85rem;align-items:center">
+    <img src="assets/logos/future-onward.png" alt="Future Onward" style="width:min(100%,240px);border-radius:16px" />
+    <p style="text-align:center;color:#c9d7e6;font-size:.85rem">Shaikh Firdous Mahmood, Director<br/><strong style="color:#fff">director@futureonward.com</strong></p>
+  </div>
+</div>
+</div>
+  <div class="footer">
+    <span>Reg. No. C-193816</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Partners">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Partner Ecosystem</div>
+<h2>World-class partners, one coordinated delivery</h2>
+<div class="grid-3" style="margin-top:.95rem">
+  <div class="card partner-card">
+    <div class="logo-box" style="background:#0b0b0b"><img src="assets/logos/kinwin-wordmark.png" alt="KINWIN" style="max-height:42px" /></div>
+    <div><div class="role">Electric Buses</div><h3>CHTC KINWIN</h3><p>Self-developed motors, MCU, VCU and integrated powertrain — full-scenario commercial EV platforms.</p></div>
+  </div>
+  <div class="card partner-card">
+    <div class="logo-box"><img src="assets/logos/huawei-logo.svg" alt="Huawei" style="max-height:40px" /></div>
+    <div><div class="role">Charging</div><h3>Huawei</h3><p>High-power DC charging, intelligent power allocation and fleet charging management.</p></div>
+  </div>
+  <div class="card partner-card">
+    <div class="logo-box" style="background:#f4f8f5"><img src="assets/logos/wietc.svg" alt="WIETC" style="max-height:50px" /></div>
+    <div><div class="role">Depot EPC</div><h3>WIETC</h3><p>International EPC with Bangladesh BRT corridor experience and EV depot capability.</p></div>
+  </div>
+</div>
+</div>
+  <div class="footer">
+    <span>Bus · Charge · Depot</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="KINWIN Strengths">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Corporate &amp; Product Advantages</div>
+<h2>Why KINWIN — technology depth and product strengths</h2>
+<div class="grid-2" style="margin-top:.75rem">
+  <div class="card"><h3>Technical advantages</h3><ul>
+    <li>Among the few Chinese enterprises with full independent R&amp;D of motors, MCU, VCU and four-in-one integrated powertrain</li>
+    <li>Core EV components self-developed — faster fault diagnosis and resolution</li>
+    <li>Full-scenario commercial vehicle coverage with strong three-electric performance</li>
+    <li>High-Tech Enterprise &amp; national-level Specialized, Refined, Differential and Innovative enterprise</li>
+    <li>Eco-friendly body pretreatment (Chemetall silane) and PPG electrophoretic coating</li>
+  </ul></div>
+  <div class="card"><h3>Application footprint</h3><ul>
+    <li>Domestic deployments across southern, central, northern and southwestern China (e.g. Lishui, Changning, Leshan PT)</li>
+    <li>Exports to 50+ countries/regions incl. Saudi Arabia, India, Korea, Japan and EU</li>
+    <li>12 m buses/coaches exported to India as KD kits for local assembly</li>
+    <li>Leading electric commercial-vehicle export volume to South Korea</li>
+    <li>Nanjing campus: ~RMB 5 bn investment, ~50 ha industrial base</li>
+  </ul></div>
+</div>
+</div>
+  <div class="footer">
+    <span>Source: KINWIN corporate & product briefing</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="KINWIN Video">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Partner Media</div>
+<h2>KINWIN company introduction</h2>
+<div class="media-frame" style="margin-top:.6rem">
+  <video controls playsinline preload="metadata" src="assets/video/kinwin-company.mp4"></video>
+</div>
+<p class="note">Play during presentation, or leave for the technical working session. Duration ≈ 1 min 50 sec.</p>
+</div>
+  <div class="footer">
+    <span>Local video file embedded in deck</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Models Overview">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Proposed Models</div>
+<h2>HTK6121GBEV (12 m) &amp; HTK6901GBEV (9 m)</h2>
+<div class="grid-2" style="margin-top:.7rem">
+  <div class="bus-photo-wrap">
+    <img class="bus-photo" src="assets/images/htk6121-front.jpg" alt="KINWIN electric bus front" />
+    <div class="tag">KINWIN electric city bus</div>
+  </div>
+  <div class="bus-photo-wrap">
+    <img class="bus-photo" src="assets/images/htk-side.jpg" alt="KINWIN electric bus side" />
+    <div class="tag">Low-entry · dual door · RHD</div>
+  </div>
+</div>
+<div class="grid-2" style="margin-top:.75rem">
+  <div class="card"><h3>HTK6121GBEV — 12 m class</h3><p>12,135 mm · 75/36 passengers · ≥250 km cruise · 352 kWh CATL · 175/350 kW PMSM · CCS2 dual gun</p></div>
+  <div class="card"><h3>HTK6901GBEV — 9 m class</h3><p>8,990 mm · 58/21 passengers · ≥220 km cruise · 255 kWh CATL · 120/240 kW PMSM · CCS2 dual gun</p></div>
+</div>
+</div>
+  <div class="footer">
+    <span>Configuration sheets dated 5 Sep 2026</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="HTK6121 Specs">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Detailed Specification · 12 m</div>
+<h2>HTK6121GBEV — key configuration</h2>
+<div class="grid-2" style="margin-top:.55rem">
+  <div class="bus-photo-wrap"><img class="bus-photo" src="assets/images/htk6121-front.jpg" alt="HTK6121" style="min-height:280px" /></div>
+  <div class="card" style="padding:.55rem .7rem; overflow:auto; max-height:min(58vh,460px)">
+    <table class="spec-table">
+      <tr><th>Type</th><td>Electric low-entry city bus · RHD</td></tr>
+      <tr><th>Dimensions (L×W×H)</th><td>12,135 × 2,530 × 3,265 mm</td></tr>
+      <tr><th>Wheelbase</th><td>5,900 mm</td></tr>
+      <tr><th>Curb / GVW</th><td>13,500 / 19,000 kg</td></tr>
+      <tr><th>Passengers</th><td>75 / 36 (max / seats)</td></tr>
+      <tr><th>Cruise mileage*</th><td>≥ 250 km</td></tr>
+      <tr><th>Motor</th><td>175/350 kW · 1400/3500 N·m · PMSM · CHTC</td></tr>
+      <tr><th>Battery</th><td>352 kWh water-cooled · CATL</td></tr>
+      <tr><th>Charging</th><td>CCS2 · dual gun</td></tr>
+      <tr><th>Axles / brakes</th><td>ZF RL82EC / AV133 · disc · ABS+ASR+EBS</td></tr>
+      <tr><th>Suspension</th><td>Air suspension + ECAS kneel</td></tr>
+      <tr><th>Accessibility</th><td>Wheelchair area + disabled ramp</td></tr>
+    </table>
+    <p class="note">*Subject to terrain, climate, AC use and driving habits.</p>
+  </div>
+</div>
+</div>
+  <div class="footer">
+    <span>Source: HTK6121GBEV configuration sheet</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="HTK6901 Specs">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Detailed Specification · 9 m</div>
+<h2>HTK6901GBEV — key configuration</h2>
+<div class="grid-2" style="margin-top:.55rem">
+  <div class="bus-photo-wrap"><img class="bus-photo" src="assets/images/htk-side.jpg" alt="HTK6901" style="min-height:280px" /></div>
+  <div class="card" style="padding:.55rem .7rem; overflow:auto; max-height:min(58vh,460px)">
+    <table class="spec-table">
+      <tr><th>Type</th><td>Electric low-entry city bus · RHD</td></tr>
+      <tr><th>Dimensions (L×W×H)</th><td>8,990 × 2,490 × 3,304 mm</td></tr>
+      <tr><th>Wheelbase</th><td>4,750 mm</td></tr>
+      <tr><th>Curb / GVW</th><td>10,500 / 15,000 kg</td></tr>
+      <tr><th>Passengers</th><td>58 / 21 (max / seats)</td></tr>
+      <tr><th>Cruise mileage*</th><td>≥ 220 km</td></tr>
+      <tr><th>Motor</th><td>120/240 kW · 1040/3000 N·m · PMSM · CHTC</td></tr>
+      <tr><th>Battery</th><td>255.02 kWh water-cooled · CATL</td></tr>
+      <tr><th>Charging</th><td>CCS2 · dual gun</td></tr>
+      <tr><th>Turning radius</th><td>≤ 9 m</td></tr>
+      <tr><th>Suspension</th><td>Air suspension + ECAS kneel</td></tr>
+      <tr><th>Accessibility</th><td>Wheelchair area + disabled ramp</td></tr>
+    </table>
+    <p class="note">*Subject to terrain, climate, AC use and driving habits. Ideal for branch / high-density urban routes.</p>
+  </div>
+</div>
+</div>
+  <div class="footer">
+    <span>Source: HTK6901GBEV configuration sheet</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Warranty">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Maintenance Services</div>
+<h2>Warranty &amp; aftersales framework</h2>
+<div class="grid-3" style="margin-top:.85rem">
+  <div class="card price-card"><h3>Battery</h3><div class="amt">8 yrs<span> / 600,000 km</span></div><p>Whichever comes first. Degradation shall not exceed 20%.</p></div>
+  <div class="card price-card"><h3>Motor &amp; controller</h3><div class="amt">5 yrs<span> / 300,000 km</span></div><p>Whichever comes first — per project warranty requirement.</p></div>
+  <div class="card price-card"><h3>Complete vehicle (CBU)</h3><div class="amt">2 yrs<span> / 150,000 km</span></div><p>Whichever comes first — project warranty baseline.</p></div>
+</div>
+<div class="split-list">
+  <div class="card"><h3>After warranty</h3><p>Customer bears aftersales maintenance costs. KINWIN may establish local aftersales stations or authorize local workshops for repair and maintenance.</p></div>
+  <div class="card"><h3>Contractual detail</h3><p>Upon procurement contract signing: aftersales agreements, spare-parts lists, and wearing/consumable terms will be specified and complied with contractually.</p></div>
+</div>
+</div>
+  <div class="footer">
+    <span>Per KINWIN warranty framework</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Integration">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Delivery Architecture</div>
+<h2>One project framework — three coordinated workstreams</h2>
+<div class="flow">
+  <div class="node"><strong>KINWIN Buses</strong><span>HTK6121 &amp; HTK6901</span></div>
+  <div class="arrow">→</div>
+  <div class="node"><strong>Huawei Charging</strong><span>Duty-cycle sized DC ecosystem</span></div>
+  <div class="arrow">→</div>
+  <div class="node"><strong>WIETC Depots</strong><span>Civil, MV/HV power &amp; workshops</span></div>
+</div>
+<div class="grid-3" style="margin-top:1rem">
+  <div class="card"><h3>Interoperability</h3><p>Battery, charger power and depot electrics sized to one operating profile.</p></div>
+  <div class="card"><h3>Capital efficiency</h3><p>Avoid oversizing transformers and chargers via real fleet modelling.</p></div>
+  <div class="card"><h3>Accountability</h3><p>One coordination layer for commissioning, training and aftersales.</p></div>
+</div>
+</div>
+  <div class="footer">
+    <span>Plus system integration &amp; lifecycle services</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Huawei Charging">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Charging Infrastructure</div>
+<h2>Huawei high-power DC charging ecosystem</h2>
+<div class="checklist" style="margin-bottom:.75rem">
+  <div><i>✓</i><div><strong>High-power DC fast charging</strong><span>Matched to bus packs and service windows</span></div></div>
+  <div><i>✓</i><div><strong>Intelligent power allocation</strong><span>Maximise available grid connection</span></div></div>
+  <div><i>✓</i><div><strong>Central monitoring / CMS</strong><span>Fleet charging visibility &amp; scheduling</span></div></div>
+  <div><i>✓</i><div><strong>Scalable architecture</strong><span>Ready for fleet expansion &amp; optional RE/BESS</span></div></div>
+</div>
+<p class="note">Detailed charger sizing and depot electrical demand to be modelled with BRTC schedules in the technical workshop.</p>
+</div>
+  <div class="footer">
+    <span>Sales partner — Huawei International Pte. Ltd.</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Huawei Video">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Partner Media</div>
+<h2>Huawei charging / EV infrastructure overview</h2>
+<div class="media-frame" style="margin-top:.55rem">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/OXsaxX6lFwU?si=Dq2Q_TXrvuvdg4Qr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+<p class="note" style="display:flex;flex-wrap:wrap;gap:.75rem;align-items:center">
+  <a href="https://youtu.be/OXsaxX6lFwU?si=Dq2Q_TXrvuvdg4Qr" target="_blank" rel="noopener" style="color:var(--cyan);font-weight:700;text-decoration:none;border:1px solid rgba(30,200,224,.45);padding:.4rem .75rem;border-radius:999px">Open on YouTube</a>
+  <span>If the embed does not load (common when opening the HTML file directly), use the button or serve the deck over http://localhost.</span>
+</p>
+</div>
+  <div class="footer">
+    <span>Partner media · Huawei</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Depots">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Depot Construction / Upgrade</div>
+<h2>WIETC — EPC with Bangladesh footprint</h2>
+<div class="grid-2" style="margin-top:.75rem">
+  <div class="card"><h3>Depot scope (as required)</h3><ul>
+    <li>Master planning &amp; detailed engineering</li>
+    <li>Modification / strengthening of existing depots</li>
+    <li>11 / 33 kV substations, RMUs &amp; transformers</li>
+    <li>Charger foundations, cabling &amp; circulation</li>
+    <li>EV workshops, washing, fire &amp; CMS systems</li>
+  </ul></div>
+  <div class="card"><h3>Why WIETC</h3><ul>
+    <li>ENR Top 250 international contractor track record</li>
+    <li>ADB / AFD safeguard experience</li>
+    <li>Greater Dhaka SUTP / BRT Gazipur–Airport works</li>
+    <li>Local approvals, utilities &amp; construction familiarity</li>
+  </ul></div>
+</div>
+</div>
+  <div class="footer">
+    <span>Scope tailored after joint depot site assessment</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="KD Investment">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Long-Term Industrial Pathway</div>
+<h2>KD and local assembly investment with Pragoti</h2>
+<p class="lede" style="margin-top:0">KINWIN and partners are aligned on a phased Bangladesh industrial pathway with Pragoti: establish operational footprint now; scale to CKD/SKD assembly and plant investment as market demand grows.</p>
+<div class="roadmap">
+  <div class="card"><span class="step">PHASE 01</span><h3>Footprint now</h3><p>CBU / early supply through Pragoti for BRTC; aftersales setup; training; spare-parts pipeline; technical localization planning.</p></div>
+  <div class="card"><span class="step">PHASE 02</span><h3>KD ramp-up</h3><p>Progressive CKD/SKD kits for local assembly — building on KINWIN’s proven KD supply experience (e.g. India) as volumes justify.</p></div>
+  <div class="card"><span class="step">PHASE 03</span><h3>Plant investment</h3><p>When demand is established, invest in a dedicated assembly / KD plant in partnership with Pragoti and relevant authorities — jobs, technology transfer, industrial capability.</p></div>
+</div>
+<div class="open-box" style="margin-top:.9rem"><strong>Our position:</strong> We are not seeking a one-off import transaction only. We seek a long-term industrial partnership anchored in Bangladesh.</div>
+</div>
+  <div class="footer">
+    <span>Subject to market demand, policy support and joint feasibility with Pragoti</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Value">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Why This Matters</div>
+<h2>Value for Pragoti, BRTC and national stakeholders</h2>
+<div class="grid-4" style="margin-top:.85rem">
+  <div class="card"><h3>Pragoti</h3><p>Clear industrial localization path from CBU to KD/assembly with a complete technology stack.</p></div>
+  <div class="card"><h3>BRTC</h3><p>Reliable fleet operations grounded in warranty, charging windows and depot readiness.</p></div>
+  <div class="card"><h3>BSEC</h3><p>Enterprise-level delivery plus a credible long-term investment narrative.</p></div>
+  <div class="card"><h3>Ministry</h3><p>Green mobility aligned with national industrial capability building.</p></div>
+</div>
+</div>
+  <div class="footer">
+    <span>Technology transfer built into the approach</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Next Steps">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Pathway Forward</div>
+<h2>From EOI clarification to implementable baseline</h2>
+<div class="grid-3" style="margin-top:.95rem">
+  <div class="card"><h3>01 · Joint workshop</h3><p>Confirm assumptions: fleet mix (12 m / 9 m), duty cycles, warranty application, and evaluation criteria.</p></div>
+  <div class="card"><h3>02 · Depot &amp; grid survey</h3><p>Priority BRTC depot visits for electrical, civil and layout constraints; charging power modelling.</p></div>
+  <div class="card"><h3>03 · Technical baseline</h3><p>Lock fleet mix, charging and depot packages; then proceed to structured commercial discussion; open KD feasibility track.</p></div>
+</div>
+</div>
+  <div class="footer">
+    <span>We request a mutually convenient date for the detailed technical session</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Close">
+  <div class="topbar">
+    <div class="brand-row">
+      <img src="assets/logos/future-onward.png" alt="Future Onward" />
+      <div class="brand-meta"><strong>Future Onward OPC</strong><span>EOI Presentation</span></div>
+    </div>
+    <div class="audience-logos">
+      <div class="chip"><img src="assets/logos/pragoti.svg" alt="Pragoti" /><span>Pragoti</span></div>
+      <div class="chip"><img src="assets/logos/brtc-transparent.png" alt="BRTC" /><span>BRTC</span></div>
+      <div class="chip"><img src="assets/logos/moind-emblem.png" alt="MoInd" /><span>Ministry</span></div>
+      <div class="chip"><img src="assets/logos/bsec-emblem.png" alt="BSEC" /><span>BSEC</span></div>
+    </div>
+  </div>
+  <div class="content">
+<div class="kicker">Commitment</div>
+<h2>Ready to build — and to invest for the long term</h2>
+<p class="lede">Future Onward OPC, with KINWIN, Huawei and WIETC, is committed to working with Pragoti Industries Limited, BRTC, BSEC and the Ministry of Industries to deliver a modern, reliable, scalable electric public-transport system — and a future KD/assembly footprint in Bangladesh.</p>
+<div class="contact">
+  <img src="assets/logos/future-onward.png" alt="Future Onward" />
+  <div><strong style="font-size:1.02rem">Shaikh Firdous Mahmood</strong><br/>Director, Future Onward OPC<br/><span style="color:var(--cyan)">director@futureonward.com</span></div>
+</div>
+</div>
+  <div class="footer">
+    <span>Thank you — we welcome your questions and guidance</span>
+    <div class="progress"><span class="page"></span><div class="bar"><i></i></div></div>
+  </div>
+</section>
+
+</div>
+<div class="nav-hint">
+  <button type="button" id="prev" aria-label="Previous">‹</button>
+  <button type="button" id="next" aria-label="Next">›</button>
+</div>
+<script>
+  const slides = [...document.querySelectorAll(".slide")];
+  let i = 0;
+  const total = slides.length;
+  function pauseMedia() {
+    document.querySelectorAll("video").forEach(v => { try { v.pause(); } catch(e){} });
+  }
+  function show(n) {
+    pauseMedia();
+    i = (n + total) % total;
+    slides.forEach((s, idx) => s.classList.toggle("active", idx === i));
+    slides.forEach((s, idx) => {
+      const bar = s.querySelector(".bar > i");
+      const page = s.querySelector(".page");
+      if (bar) bar.style.width = ((idx + 1) / total * 100).toFixed(1) + "%";
+      if (page) page.textContent = (idx + 1) + " / " + total;
+    });
+    document.title = slides[i].dataset.title + " · Future Onward EOI";
+  }
+  document.getElementById("next").onclick = () => show(i + 1);
+  document.getElementById("prev").onclick = () => show(i - 1);
+  window.addEventListener("keydown", (e) => {
+    if (["ArrowRight","PageDown"," ","Enter"].includes(e.key)) { e.preventDefault(); show(i + 1); }
+    if (["ArrowLeft","PageUp","Backspace"].includes(e.key)) { e.preventDefault(); show(i - 1); }
+    if (e.key === "Home") show(0);
+    if (e.key === "End") show(total - 1);
+  });
+  show(0);
+</script>
+</body>
+</html>
